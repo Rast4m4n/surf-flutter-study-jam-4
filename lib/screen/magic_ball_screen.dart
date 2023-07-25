@@ -37,12 +37,12 @@ class _MagicBallScreenState extends State<MagicBallScreen> {
         vm.getBallResponse();
       });
     });
-    return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 25, 14, 44),
-      body: SafeArea(
-        child: Center(
-          child: GestureDetector(
-            onTap: vm.getBallResponse,
+    return GestureDetector(
+      onTap: vm.getBallResponse,
+      child: Scaffold(
+        backgroundColor: const Color.fromARGB(255, 25, 14, 44),
+        body: SafeArea(
+          child: Center(
             child: Column(
               children: [
                 Expanded(
