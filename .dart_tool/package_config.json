@@ -14,6 +14,12 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "animated_text_kit",
+      "rootUri": "file:///C:/Users/motov/AppData/Local/Pub/Cache/hosted/pub.dev/animated_text_kit-4.2.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
       "name": "ansicolor",
       "rootUri": "file:///C:/Users/motov/AppData/Local/Pub/Cache/hosted/pub.dev/ansicolor-2.0.1",
       "packageUri": "lib/",
@@ -482,7 +488,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2023-07-25T08:26:00.911225Z",
+  "generated": "2023-07-25T10:47:57.452009Z",
   "generator": "pub",
   "generatorVersion": "3.0.5"
 }

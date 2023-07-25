@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:surf_practice_magic_ball/data/api/services/eight_ball_api.dart';
+import 'package:surf_practice_magic_ball/domain/model/eight_ball_model.dart';
 import 'package:surf_practice_magic_ball/resources/resources.dart';
 
 abstract class IMagicBallViewModel implements ChangeNotifier {
   String imagePath = Images.ball;
-  String text = '';
+  late EightBallModel model;
+  late EightBallApi api;
   bool isHiddenStars = false;
   void ballResponse() {}
 
@@ -11,55 +14,69 @@ abstract class IMagicBallViewModel implements ChangeNotifier {
 }
 
 class MagicBallViewModel extends ChangeNotifier implements IMagicBallViewModel {
-  MagicBallViewModel();
+  MagicBallViewModel({
+    required this.model,
+    required this.api,
+  });
 
   @override
   String imagePath = Images.ball;
 
   @override
-  String text = '';
+  bool isHiddenStars = false;
 
   @override
-  void ballResponse() {
+  EightBallModel model;
+
+  @override
+  EightBallApi api;
+
+  @override
+  Future<void> ballResponse() async {
     clearResponse();
-    text = 'Ответ';
+    final data = await api.getEightBallData();
+    model = model.copyWith(data.reading);
     isHiddenStars = true;
     notifyListeners();
   }
 
   @override
   void clearResponse() {
-    text = '';
     isHiddenStars = false;
+    model = model.copyWith('');
     notifyListeners();
   }
-
-  @override
-  bool isHiddenStars = false;
 }
 
 class MockMagicBallViewModel extends ChangeNotifier
     implements IMagicBallViewModel {
+  MockMagicBallViewModel({
+    required this.model,
+    required this.api,
+  });
   @override
   String imagePath = Images.ball;
 
   @override
-  String text = '';
-
-  @override
   void ballResponse() {
     clearResponse();
-    text = 'Ответ';
     isHiddenStars = true;
+    model = model.copyWith('Ответ');
     notifyListeners();
   }
 
   @override
   void clearResponse() {
+    model = model.copyWith('');
     isHiddenStars = false;
-    text = '';
   }
 
   @override
   bool isHiddenStars = false;
+
+  @override
+  EightBallModel model;
+
+  @override
+  EightBallApi api;
 }
