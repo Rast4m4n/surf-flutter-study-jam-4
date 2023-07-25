@@ -1,5 +1,6 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:shake/shake.dart';
 import 'package:surf_practice_magic_ball/data/api/services/eight_ball_api.dart';
 import 'package:surf_practice_magic_ball/domain/model/eight_ball_model.dart';
 import 'package:surf_practice_magic_ball/resources/resources.dart';
@@ -31,7 +32,11 @@ class _MagicBallScreenState extends State<MagicBallScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(vm.model.reading);
+    ShakeDetector.autoStart(onPhoneShake: () {
+      setState(() {
+        vm.ballResponse();
+      });
+    });
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 25, 14, 44),
       body: SafeArea(
