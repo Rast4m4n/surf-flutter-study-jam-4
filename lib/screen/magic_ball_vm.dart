@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:surf_practice_magic_ball/data/api/config/state_request.dart';
 import 'package:surf_practice_magic_ball/data/api/services/eight_ball_api.dart';
 import 'package:surf_practice_magic_ball/domain/model/eight_ball_model.dart';
 import 'package:surf_practice_magic_ball/resources/resources.dart';
@@ -35,9 +36,25 @@ class MagicBallViewModel extends ChangeNotifier implements IMagicBallViewModel {
   Future<void> ballResponse() async {
     clearResponse();
     final data = await api.getEightBallData();
-    model = model.copyWith(data.reading);
-    isHiddenStars = true;
-    notifyListeners();
+    switch (StateRequest.state) {
+      case StateRequestEnum.success:
+        model = model.copyWith(data!.reading);
+        isHiddenStars = true;
+        notifyListeners();
+        break;
+      case StateRequestEnum.failed:
+        model = model.copyWith("Есть проблемы с предсказанием");
+        isHiddenStars = true;
+        notifyListeners();
+      case StateRequestEnum.socketFaild:
+        model = model.copyWith("Нет связи с космосом");
+        isHiddenStars = true;
+        notifyListeners();
+      default:
+        model = model.copyWith("Что то не так с шаром");
+        isHiddenStars = true;
+        notifyListeners();
+    }
   }
 
   @override
