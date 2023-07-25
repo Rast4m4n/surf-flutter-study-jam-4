@@ -47,17 +47,21 @@ class _MagicBallScreenState extends State<MagicBallScreen> {
               children: [
                 Expanded(
                   flex: 2,
-                  child: _EightBall(vm: vm),
+                  child: _EightBallWidget(vm: vm),
                 ),
                 Expanded(
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
                       Image.asset(
-                        Images.ellipse6,
+                        vm.isBallResponseError
+                            ? Images.bigShadowRed
+                            : Images.bigShadowBlue,
                       ),
                       Image.asset(
-                        Images.ellipse7,
+                        vm.isBallResponseError
+                            ? Images.smallShadowRed
+                            : Images.smallShadowBlue,
                       ),
                     ],
                   ),
@@ -65,7 +69,7 @@ class _MagicBallScreenState extends State<MagicBallScreen> {
                 Text(
                   'Нажмите на экран или потрясите телефон',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: Colors.white,
+                        color: const Color(0xff727272),
                       ),
                 ),
                 const SizedBox(height: 18),
@@ -78,8 +82,8 @@ class _MagicBallScreenState extends State<MagicBallScreen> {
   }
 }
 
-class _EightBall extends StatefulWidget {
-  const _EightBall({
+class _EightBallWidget extends StatefulWidget {
+  const _EightBallWidget({
     super.key,
     required this.vm,
   });
@@ -87,17 +91,36 @@ class _EightBall extends StatefulWidget {
   final IMagicBallViewModel vm;
 
   @override
-  State<_EightBall> createState() => _EightBallState();
+  State<_EightBallWidget> createState() => _EightBallWidgetState();
 }
 
-class _EightBallState extends State<_EightBall> {
+class _EightBallWidgetState extends State<_EightBallWidget>
+    with TickerProviderStateMixin {
+  bool isdown = false;
+
+  late final controller = AnimationController(
+    vsync: this,
+    duration: const Duration(seconds: 15),
+  )..repeat();
+
+  late final animationRotate = CurvedAnimation(
+    parent: controller,
+    curve: Curves.linear,
+  );
+
+  final durationAnimation = const Duration(seconds: 1);
+
   @override
   void initState() {
     super.initState();
     flyBall();
   }
 
-  final durationAnimation = const Duration(seconds: 1);
+  @override
+  void dispose() {
+    super.dispose();
+    controller.dispose();
+  }
 
   void flyBall() {
     if (!widget.vm.isHiddenStars) {
@@ -109,7 +132,6 @@ class _EightBallState extends State<_EightBall> {
     }
   }
 
-  bool isdown = false;
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
@@ -119,7 +141,7 @@ class _EightBallState extends State<_EightBall> {
         alignment: Alignment.center,
         children: [
           Image.asset(
-            widget.vm.imagePath,
+            widget.vm.imageBallPath,
           ),
           if (!widget.vm.isHiddenStars)
             Image.asset(
@@ -127,9 +149,12 @@ class _EightBallState extends State<_EightBall> {
               fit: BoxFit.contain,
             ),
           if (!widget.vm.isHiddenStars)
-            Image.asset(
-              Images.star,
-              fit: BoxFit.contain,
+            RotationTransition(
+              turns: animationRotate,
+              child: Image.asset(
+                Images.star,
+                fit: BoxFit.contain,
+              ),
             ),
           AnimatedTextKit(
             repeatForever: true,

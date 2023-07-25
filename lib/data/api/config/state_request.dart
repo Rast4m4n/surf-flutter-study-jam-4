@@ -1,11 +1,11 @@
 /// Состояния запроса на сервер
 enum StateRequestEnum {
   success,
-  loading,
+  idle,
   failed,
-  socketFaild,
+  socketFailed,
 }
 
 abstract class StateRequest {
-  static StateRequestEnum state = StateRequestEnum.loading;
+  static StateRequestEnum state = StateRequestEnum.idle;
 }

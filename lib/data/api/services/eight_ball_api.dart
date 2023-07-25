@@ -27,7 +27,7 @@ class EightBallApi {
         return null;
       }
     } on SocketException catch (e) {
-      StateRequest.state = StateRequestEnum.socketFaild;
+      StateRequest.state = StateRequestEnum.socketFailed;
       print(e);
       return null;
     } catch (e) {

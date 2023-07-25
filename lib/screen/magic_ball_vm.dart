@@ -5,7 +5,8 @@ import 'package:surf_practice_magic_ball/domain/model/eight_ball_model.dart';
 import 'package:surf_practice_magic_ball/resources/resources.dart';
 
 abstract class IMagicBallViewModel implements ChangeNotifier {
-  String imagePath = Images.ball;
+  String imageBallPath = Images.ball;
+  bool isBallResponseError = false;
   late EightBallModel model;
   late EightBallApi api;
 
@@ -17,6 +18,9 @@ abstract class IMagicBallViewModel implements ChangeNotifier {
 
   /// Очистка старых предсказаний
   void clearResponse() {}
+
+  /// Смена цвета шара, например, при ошибке сервера
+  void changeColorBall() {}
 }
 
 class MagicBallViewModel extends ChangeNotifier implements IMagicBallViewModel {
@@ -26,7 +30,10 @@ class MagicBallViewModel extends ChangeNotifier implements IMagicBallViewModel {
   });
 
   @override
-  String imagePath = Images.ball;
+  String imageBallPath = Images.ball;
+
+  @override
+  bool isBallResponseError = false;
 
   @override
   bool isHiddenStars = false;
@@ -45,18 +52,18 @@ class MagicBallViewModel extends ChangeNotifier implements IMagicBallViewModel {
       case StateRequestEnum.success:
         model = model.copyWith(data!.reading);
         isHiddenStars = true;
-        imagePath = Images.ball;
+        changeColorBall();
         notifyListeners();
         break;
       case StateRequestEnum.failed:
         model = model.copyWith("Есть проблемы с предсказанием");
         isHiddenStars = true;
-        imagePath = Images.redBall;
+        changeColorBall();
         notifyListeners();
-      case StateRequestEnum.socketFaild:
+      case StateRequestEnum.socketFailed:
         model = model.copyWith("Нет связи с космосом");
         isHiddenStars = true;
-        imagePath = Images.redBall;
+        changeColorBall();
         notifyListeners();
       default:
         model = model.copyWith("Что то не так с шаром");
@@ -71,37 +78,48 @@ class MagicBallViewModel extends ChangeNotifier implements IMagicBallViewModel {
     model = model.copyWith('');
     notifyListeners();
   }
+
+  @override
+  void changeColorBall() {
+    if (StateRequest.state == StateRequestEnum.failed ||
+        StateRequest.state == StateRequestEnum.socketFailed) {
+      imageBallPath = Images.redBall;
+      isBallResponseError = true;
+    } else {
+      imageBallPath = Images.ball;
+      isBallResponseError = false;
+    }
+  }
 }
 
-class MockMagicBallViewModel extends ChangeNotifier
-    implements IMagicBallViewModel {
-  MockMagicBallViewModel({
-    required this.model,
-    required this.api,
-  });
-  @override
-  String imagePath = Images.ball;
+// class MockMagicBallViewModel extends ChangeNotifier
+//     implements IMagicBallViewModel {
+//   MockMagicBallViewModel({
+//     required this.model,
+//     required this.api,
+//   });
+//   @override
+//   String imagePath = Images.ball;
 
-  @override
-  void getBallResponse() {
-    clearResponse();
-    isHiddenStars = true;
-    model = model.copyWith('Ответ');
-    notifyListeners();
-  }
+//   @override
+//   bool isHiddenStars = false;
 
-  @override
-  void clearResponse() {
-    model = model.copyWith('');
-    isHiddenStars = false;
-  }
+//   @override
+//   EightBallModel model;
 
-  @override
-  bool isHiddenStars = false;
+//   @override
+//   EightBallApi api;
+//   @override
+//   void getBallResponse() {
+//     clearResponse();
+//     isHiddenStars = true;
+//     model = model.copyWith('Ответ');
+//     notifyListeners();
+//   }
 
-  @override
-  EightBallModel model;
-
-  @override
-  EightBallApi api;
-}
+//   @override
+//   void clearResponse() {
+//     model = model.copyWith('');
+//     isHiddenStars = false;
+//   }
+// }
