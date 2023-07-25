@@ -1,0 +1,7 @@
+#Tue Jul 25 11:08:00 MSK 2023
+base.1=C\:\\MobileDev\\Projects\\surf-flutter-study-jam-4\\build\\app\\intermediates\\dex\\debug\\mergeProjectDexDebug\\classes.dex
+path.1=classes.dex
+base.0=C\:\\MobileDev\\Projects\\surf-flutter-study-jam-4\\build\\app\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex
+renamed.1=classes2.dex
+renamed.0=classes.dex
+path.0=classes.dex
