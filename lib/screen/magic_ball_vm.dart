@@ -8,9 +8,14 @@ abstract class IMagicBallViewModel implements ChangeNotifier {
   String imagePath = Images.ball;
   late EightBallModel model;
   late EightBallApi api;
-  bool isHiddenStars = false;
-  void ballResponse() {}
 
+  /// Скрытие звёзд, если шар выдал ответ
+  bool isHiddenStars = false;
+
+  /// Ответ от шара предсказаний
+  void getBallResponse() {}
+
+  /// Очистка старых предсказаний
   void clearResponse() {}
 }
 
@@ -33,22 +38,25 @@ class MagicBallViewModel extends ChangeNotifier implements IMagicBallViewModel {
   EightBallApi api;
 
   @override
-  Future<void> ballResponse() async {
+  Future<void> getBallResponse() async {
     clearResponse();
     final data = await api.getEightBallData();
     switch (StateRequest.state) {
       case StateRequestEnum.success:
         model = model.copyWith(data!.reading);
         isHiddenStars = true;
+        imagePath = Images.ball;
         notifyListeners();
         break;
       case StateRequestEnum.failed:
         model = model.copyWith("Есть проблемы с предсказанием");
         isHiddenStars = true;
+        imagePath = Images.redBall;
         notifyListeners();
       case StateRequestEnum.socketFaild:
         model = model.copyWith("Нет связи с космосом");
         isHiddenStars = true;
+        imagePath = Images.redBall;
         notifyListeners();
       default:
         model = model.copyWith("Что то не так с шаром");
@@ -75,7 +83,7 @@ class MockMagicBallViewModel extends ChangeNotifier
   String imagePath = Images.ball;
 
   @override
-  void ballResponse() {
+  void getBallResponse() {
     clearResponse();
     isHiddenStars = true;
     model = model.copyWith('Ответ');

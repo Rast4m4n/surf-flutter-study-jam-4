@@ -34,7 +34,7 @@ class _MagicBallScreenState extends State<MagicBallScreen> {
   Widget build(BuildContext context) {
     ShakeDetector.autoStart(onPhoneShake: () {
       setState(() {
-        vm.ballResponse();
+        vm.getBallResponse();
       });
     });
     return Scaffold(
@@ -42,7 +42,7 @@ class _MagicBallScreenState extends State<MagicBallScreen> {
       body: SafeArea(
         child: Center(
           child: GestureDetector(
-            onTap: vm.ballResponse,
+            onTap: vm.getBallResponse,
             child: Column(
               children: [
                 Expanded(

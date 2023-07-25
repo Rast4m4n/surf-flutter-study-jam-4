@@ -1,3 +1,4 @@
+/// Состояния запроса на сервер
 enum StateRequestEnum {
   success,
   loading,
