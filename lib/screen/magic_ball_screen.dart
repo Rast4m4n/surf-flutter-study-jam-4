@@ -14,7 +14,7 @@ class MagicBallScreen extends StatefulWidget {
 }
 
 class _MagicBallScreenState extends State<MagicBallScreen> {
-  final IMagicBallViewModel vm = MagicBallViewModel(
+  late final IMagicBallViewModel vm = MagicBallViewModel(
     model: EightBallModel(
       reading: '',
     ),
@@ -24,7 +24,6 @@ class _MagicBallScreenState extends State<MagicBallScreen> {
   @override
   void initState() {
     super.initState();
-
     vm.addListener(() {
       setState(() {});
     });
