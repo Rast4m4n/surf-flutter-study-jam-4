@@ -4,6 +4,7 @@ import 'package:shake/shake.dart';
 import 'package:surf_practice_magic_ball/data/api/services/eight_ball_api.dart';
 import 'package:surf_practice_magic_ball/domain/model/eight_ball_model.dart';
 import 'package:surf_practice_magic_ball/resources/resources.dart';
+import 'package:surf_practice_magic_ball/screen/magic_ball_animation.dart';
 import 'package:surf_practice_magic_ball/screen/magic_ball_vm.dart';
 
 class MagicBallScreen extends StatefulWidget {
@@ -27,15 +28,15 @@ class _MagicBallScreenState extends State<MagicBallScreen> {
     vm.addListener(() {
       setState(() {});
     });
-  }
-
-  @override
-  Widget build(BuildContext context) {
     ShakeDetector.autoStart(onPhoneShake: () {
       setState(() {
         vm.getBallResponse();
       });
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return GestureDetector(
       onTap: vm.getBallResponse,
       child: Scaffold(
@@ -90,52 +91,39 @@ class _EightBallWidget extends StatefulWidget {
   final IMagicBallViewModel vm;
 
   @override
-  State<_EightBallWidget> createState() => _EightBallWidgetState();
+  State<_EightBallWidget> createState() => EightBallWidgetState();
 }
 
-class _EightBallWidgetState extends State<_EightBallWidget>
+class EightBallWidgetState extends State<_EightBallWidget>
     with TickerProviderStateMixin {
-  bool isdown = false;
-
-  late final controller = AnimationController(
-    vsync: this,
-    duration: const Duration(seconds: 15),
-  )..repeat();
-
-  late final animationRotate = CurvedAnimation(
-    parent: controller,
-    curve: Curves.linear,
+  late final IMagicBallAnimationModel animationModel = MagicBallAnimationModel(
+    vm: widget.vm,
+    magicBallWidget: this,
   );
-
-  final durationAnimation = const Duration(seconds: 1);
 
   @override
   void initState() {
     super.initState();
-    flyBall();
+    animationModel.addListener(() {
+      setState(() {});
+    });
+    animationModel.flyBall();
   }
 
   @override
   void dispose() {
     super.dispose();
-    controller.dispose();
-  }
-
-  void flyBall() {
-    if (!widget.vm.isHiddenStars) {
-      isdown = !isdown;
-      setState(() {});
-      Future.delayed(durationAnimation, () {
-        flyBall();
-      });
-    }
+    animationModel.disposeAnimation();
   }
 
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      duration: durationAnimation,
-      alignment: isdown ? Alignment.center : AlignmentDirectional.topCenter,
+      duration: animationModel.durationAnimation,
+      curve: Curves.easeInOut,
+      alignment: animationModel.isDown
+          ? Alignment.bottomCenter
+          : AlignmentDirectional.topCenter,
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -149,7 +137,7 @@ class _EightBallWidgetState extends State<_EightBallWidget>
             ),
           if (!widget.vm.isHiddenStars)
             RotationTransition(
-              turns: animationRotate,
+              turns: animationModel.animationRotation,
               child: Image.asset(
                 Images.star,
                 fit: BoxFit.contain,

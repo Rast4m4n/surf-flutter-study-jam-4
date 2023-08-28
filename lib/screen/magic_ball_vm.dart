@@ -4,22 +4,6 @@ import 'package:surf_practice_magic_ball/data/api/services/eight_ball_api.dart';
 import 'package:surf_practice_magic_ball/domain/model/eight_ball_model.dart';
 import 'package:surf_practice_magic_ball/resources/resources.dart';
 
-abstract class IMagicBallAnimation {
-  late Widget animationWidget;
-  late AnimationController controllerRotation;
-  late CurvedAnimation animationRotation = CurvedAnimation(
-    parent: controllerRotation,
-    curve: Curves.linear,
-  );
-  Duration durationAnimation = const Duration(seconds: 1);
-
-  void disposeAnimation();
-  void initAnimation();
-  void flyBall();
-
-  bool isDown = false;
-}
-
 abstract class IMagicBallViewModel implements ChangeNotifier {
   String imageBallPath = Images.ball;
   bool isBallResponseError = false;
